@@ -10,19 +10,27 @@ export class CreateExpenseDto {
   price: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   userId: number;
 
   @IsBoolean()
-  @IsNotEmpty()
+  @IsOptional()
   essential: boolean;
   
   @IsNumber()
   @IsOptional()
-  recurrence?: number;
+  monthId?: number;
+  
+  @IsNumber()
+  @IsOptional()
+  recurrences?: number;
 
   @IsNumber()
   @IsOptional()
   categoryId?: number;
+
+  @IsString()
+  @IsOptional()
+  currentRecurrence?: number
 
 }

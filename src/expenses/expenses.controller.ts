@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ExpensesService } from './expenses.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Decimal } from '@prisma/client/runtime/library';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { ExpensesService } from './expenses.service';
+import { IFindExpense } from './interface/expense.interface';
+import { IFiltersExpense } from './interface/filters-expense.interface';
 
 @Controller('expenses')
 export class ExpensesController {
@@ -10,13 +13,13 @@ export class ExpensesController {
   ) {}
 
   @Post()
-  create(@Body() createExpenseDto: CreateExpenseDto) {
+  create(@Body() createExpenseDto: CreateExpenseDto): Promise<[{id: number, name: string, price: Decimal}]> {
     return this.expensesService.create(createExpenseDto);
   }
 
   @Get()
-  findAll() {
-    return this.expensesService.findAll();
+  findAll(@Query() filters: IFiltersExpense): Promise<IFindExpense[]> {
+    return this.expensesService.findAll(filters);
   }
 
   @Get(':id')
