@@ -10,8 +10,8 @@ export class CategoryService {
 		return await this.prismaService.category.create({data: createCategoryDto})
 	}
 
-	findAll() {
-		return `This action returns all category`
+	async findAll() {
+		return await this.prismaService.category.findMany()
 	}
 
 	findOne(id: number) {
