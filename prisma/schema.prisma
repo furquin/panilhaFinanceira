@@ -19,26 +19,45 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   expenses  Expenses[]
+
+  @@map("users")
 }
 
 model Expenses {
-  id         Int       @id @default(autoincrement())
-  user       User?     @relation(fields: [userId], references: [id])
-  userId     Int
-  name       String
-  price      Decimal
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  recurrence Int       @default(1)
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?
-  essential  Boolean   @default(false)
+  id                Int      @id @default(autoincrement())
+  user              User     @relation(fields: [userId], references: [id])
+  userId            Int
+  name              String
+  price             Decimal
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  recurrences       Int      @default(1)
+  currentRecurrence Int      @default(1)
+  category          Category @relation(fields: [categoryId], references: [id])
+  categoryId        Int      @default(1)
+  essential         Boolean  @default(false)
+  month             Months?  @relation(fields: [monthId], references: [id])
+  monthId           Int?
+
+  @@map("expenses")
 }
 
 model Category {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   expenses  Expenses[]
+
+  @@map("categories")
+}
+
+model Months {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  expenses  Expenses[]
+
+  @@map("months")
 }
