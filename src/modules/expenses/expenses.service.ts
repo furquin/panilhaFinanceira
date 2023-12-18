@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Decimal } from '@prisma/client/runtime/library'
 import * as dayjs from 'dayjs'
-import { PrismaService } from '../database/prismaService'
+import { PrismaService } from '../../database/prismaService'
 import { CreateExpenseDto } from './dto/create-expense.dto'
 import { UpdateExpenseDto } from './dto/update-expense.dto'
 import { IFindExpense } from './interface/expense.interface'

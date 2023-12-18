@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
-import { ICategory } from "src/category/interfaces/category.interface";
-import { IUser } from "src/users/interfaces/user.interface";
+import { ICategory } from "src/modules/category/interfaces/category.interface";
+import { IUser } from "src/modules/users/interfaces/user.interface";
 
 export interface IFindExpense{
     id: number;

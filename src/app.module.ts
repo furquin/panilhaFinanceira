@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { UsersModule } from "./users/users.module";
 import { ConfigModule } from "@nestjs/config";
-import { ExpensesModule } from "./expenses/expenses.module";
-import { CategoryModule } from "./category/category.module";
+import { CategoryModule } from "./modules/category/category.module";
+import { ExpensesModule } from "./modules/expenses/expenses.module";
+import { UsersModule } from "./modules/users/users.module";
 
 @Module({
   imports: [UsersModule, ConfigModule.forRoot({ isGlobal: true }), ExpensesModule, CategoryModule],
