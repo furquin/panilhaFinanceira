@@ -35,7 +35,7 @@ export class UsersService {
 	}
 
 	async findOne(id: number): Promise<UserPresenter> {
-		return this.prisma.user.findFirstOrThrow({
+		return this.prisma.user.findUniqueOrThrow({
 			where: { id },
 			include: {
 				role: true,
@@ -50,18 +50,16 @@ export class UsersService {
 		await this.findOne(id)
 		await this.userExists(updateUserDto.email)
 
-		return this.prisma.user.update({
+		await this.prisma.user.update({
 			where: { id },
 			data: updateUserDto,
 		})
-		.then((user) => new UserPresenter(user))
-		.catch((error) => {
-			throw new Error(error)
-		})
+
+		return 'Usuário atualizado com sucesso'
 	}
 
 	private async userExists(email: string) {
-		const userExists = await this.prisma.user.findUniqueOrThrow({
+		const userExists = await this.prisma.user.findUnique({
 			where: {
 				email,
 			},
