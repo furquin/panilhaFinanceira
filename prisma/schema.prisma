@@ -16,10 +16,11 @@ model User {
   name      String
   password  String
   role      Role       @relation(fields: [roleId], references: [id])
-  roleId    Int        
+  roleId    Int
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   moviments Movement[]
+  Category  Category[]
 
   @@map("users")
 }
@@ -39,7 +40,7 @@ model Movement {
   updatedAt         DateTime @updatedAt
   recurrences       Int      @default(1)
   currentRecurrence Int      @default(1)
-  category          Category @relation(fields: [categoryId], references: [id])
+  category          Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   categoryId        Int      @default(1)
   type              EnumType
   date              DateTime
@@ -50,6 +51,8 @@ model Movement {
 model Category {
   id        Int        @id @default(autoincrement())
   name      String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    Int
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   moviments Movement[]
