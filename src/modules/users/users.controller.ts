@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './users.service'
+import { GuardRoute } from '../auth/auth.guard'
 
 @Controller('users')
 export class UsersController {
@@ -13,6 +14,7 @@ export class UsersController {
 	}
 
 	@Get()
+	@GuardRoute('user.read')
 	findAll() {
 		return this.usersService.findAll()
 	}
