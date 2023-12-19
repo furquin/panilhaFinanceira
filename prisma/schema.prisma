@@ -15,31 +15,36 @@ model User {
   email     String     @unique
   name      String
   password  String
-  role      String?    @default("user")
+  role      Role       @relation(fields: [roleId], references: [id])
+  roleId    Int        
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  expenses  Expenses[]
+  moviments Movement[]
 
   @@map("users")
 }
 
-model Expenses {
+enum EnumType {
+  INCOME
+  EXPENSE
+}
+
+model Movement {
   id                Int      @id @default(autoincrement())
-  user              User     @relation(fields: [userId], references: [id])
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId            Int
-  name              String
-  price             Decimal
+  description       String
+  valueCents        Int
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   recurrences       Int      @default(1)
   currentRecurrence Int      @default(1)
   category          Category @relation(fields: [categoryId], references: [id])
   categoryId        Int      @default(1)
-  essential         Boolean  @default(false)
-  month             Months?  @relation(fields: [monthId], references: [id])
-  monthId           Int?
+  type              EnumType
+  date              DateTime
 
-  @@map("expenses")
+  @@map("movements")
 }
 
 model Category {
@@ -47,17 +52,18 @@ model Category {
   name      String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  expenses  Expenses[]
+  moviments Movement[]
 
   @@map("categories")
 }
 
-model Months {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  expenses  Expenses[]
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
 
-  @@map("months")
+  @@map("roles")
 }

@@ -1,48 +1,34 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 async function main() {
-  const months: string[] = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro',
-  ];
-
-  months.forEach(
-    async (month, index) =>
-      await prisma.months.upsert({
-        where: { name: month },
-        update: {},
-        create: { 
-          id: index + 1,
-          name: month },
-      })
-  );
-
   await prisma.category.upsert({
     where: { name: 'Outros' },
     update: {},
     create: { name: 'Outros' },
-  })
+  });
+
+  for (const value of [{ id: 1, name: 'Administrador', slug: 'admin_geral' }, { id: 2, name: 'Usuário', slug: 'user' }]) {
+    await prisma.role.upsert({
+      where: { name: value.name },
+      update: {},
+      create: {
+        id: value.id,
+        name: value.name,
+        slug: value.slug
+      },
+    });
+  }
 
   await prisma.user.upsert({
     where: { email: 'laert.ff@gmail.com' },
     update: {},
-    create: { 
-        name: 'Laert Furquin Neto',
-        email: 'laert.ff@gmail.com',
-        password: '12345678',
-        role: 'admin',         
+    create: {
+      name: 'Laert Furquin Neto',
+      email: 'laert.ff@gmail.com',
+      password: '12345678',
+      role: { connect: { id: 1 } },
     },
-  })
+  });
 }
 main()
   .then(async () => {
