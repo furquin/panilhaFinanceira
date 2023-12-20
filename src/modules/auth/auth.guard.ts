@@ -1,4 +1,14 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, SetMetadata, UnauthorizedException, UseGuards, applyDecorators, createParamDecorator } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  SetMetadata,
+  UnauthorizedException,
+  UseGuards,
+  applyDecorators,
+  createParamDecorator,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -24,7 +34,7 @@ export class AuthGuard {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -47,47 +57,46 @@ export class AuthGuard {
   }
   async getAuthFromToken(token: string) {
     const payload = this.jwtService.verify(token, {
-        secret: this.configService.get('JWT_SECRET_KEY'),
-        });
+      secret: this.configService.get('JWT_SECRET_KEY'),
+    });
     const auth = await this.getAuth(payload.id);
     return auth;
   }
 
   private async getAuth(userId: number) {
     const user = await this.prismaService.user.findFirst({
-        where: { id: userId },
-        include: { role: true },
-    });  
-    
+      where: { id: userId },
+      include: { role: true },
+    });
 
     if (!user) {
-        throw new ForbiddenException('Usuário não encontrado.');
+      throw new ForbiddenException('Usuário não encontrado.');
     }
-    
+
     return new AuthPresenter({ user: new UserPresenter(user), role: user.role });
-}
+  }
   extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-		return type === 'Bearer' ? token : undefined;
+    return type === 'Bearer' ? token : undefined;
   }
 }
 
 @Injectable()
 class ActionGuard implements CanActivate {
   constructor(
-    private readonly aclService: ACLService, //
-    ) {}
+    private readonly aclService: ACLService //
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const actions = Reflect.getMetadata('actions', context.getHandler());
-		const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest();
 
-		const { auth } = request;
+    const { auth } = request;
 
-		if (!auth) {
-			throw new UnauthorizedException('Sem token de autenticação.');
-		}
+    if (!auth) {
+      throw new UnauthorizedException('Sem token de autenticação.');
+    }
 
-		return this.aclService.verifyPermission(actions, auth);
+    return this.aclService.verifyPermission(actions, auth);
   }
 }
