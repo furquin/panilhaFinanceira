@@ -4,6 +4,5 @@
   "semi": true,
   "useTabs": false,
   "singleQuote": true,
-  "printWidth": 150,
-  "parser": "flow"
+  "printWidth": 150
 }
