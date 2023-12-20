@@ -1,7 +1,10 @@
 import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { ApiTags } from "@nestjs/swagger";
+import { LoginDto } from "./dto/login.dto";
 
 @Controller()
+@ApiTags('auth')
 export class AuthController {
     constructor(
     private readonly authService: AuthService,//
@@ -9,7 +12,7 @@ export class AuthController {
    
     @HttpCode(200)
     @Post('auth/sign-in')
-    async signIn(@Body() data: { email: string; password: string }) {
+    async signIn(@Body() data: LoginDto) {
         const { email, password } = data;
         return this.authService.signIn(email, password);
     }
