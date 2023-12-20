@@ -12,17 +12,19 @@ export class CategoryService {
     await this.findOneByName(createCategoryDto.name, auth.user.id).then((category) => {
       if (category) throw new ConflictException('Categoria com esse nome já existe.');
     });
-    const category =  await this.prismaService.category.create({
+    const category = await this.prismaService.category.create({
       data: { ...createCategoryDto, user: { connect: { id: auth.user.id } } },
-    })
+    });
 
     return new CategoryPresenter(category);
   }
 
   async findAll(auth: AuthPresenter): Promise<CategoryPresenter[]> {
-    return await this.prismaService.category.findMany({
-      where: { userId: auth.user.id },
-    }).then((categories) => categories.map((category) => new CategoryPresenter(category)));
+    return await this.prismaService.category
+      .findMany({
+        where: { userId: auth.user.id },
+      })
+      .then((categories) => categories.map((category) => new CategoryPresenter(category)));
   }
 
   private async findOne(id: number, userId: number): Promise<CategoryPresenter> {
