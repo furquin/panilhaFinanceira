@@ -1,16 +1,30 @@
-import { Type } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { Type } from "class-transformer";
+import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from "class-validator";
 
 export class MovementDto {
-  description: string;
+    @IsString({ message: 'A descrição deve ser uma string' })
+    @IsOptional()
+    description: string;
 
-  valueCents: number;
+    @IsNumber({}, { message: 'O valor deve ser um número' })
+    @IsNotEmpty({ message: 'O valor não pode ser vazio' })
+    valueCents: number;
 
-  recurrences: number;
+    @IsNumber({}, { message: 'A recorrência deve ser um número' })
+    @IsNotEmpty({ message: 'A recorrência não pode ser vazia' })
+    @Min(1, { message: 'A recorrência deve ser maior que 0' })
+    recurrences: number;
 
-  categoryId: number;
+    @IsNumber({}, { message: 'A categoria deve ser um número' })
+    @IsNotEmpty({ message: 'A categoria não pode ser vazia' })
+    categoryId: number;
 }
 
 export class CreateMovementsDTO {
-  movements: MovementDto[];
+    @IsNotEmpty({ message: 'O array de movimentações não pode ser vazio' })
+    @IsArray({ message: 'Movimentações deve ser um array'})
+    @ArrayMinSize(1, { message: 'O array de movimentações deve ter pelo menos 1 movimentação' })
+    @ValidateNested({ each: true })
+    @Type(() => MovementDto)
+    movements: MovementDto[];
 }
