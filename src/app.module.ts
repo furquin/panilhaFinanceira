@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from './database/prisma.module';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './services/exception/handle-exception.catch';
+import { ExpenseModule } from './modules/expense/expense.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { GlobalExceptionFilter } from './services/exception/handle-exception.cat
     ACLModule,
     JwtModule.register({ global: true }),
     PrismaModule,
+    ExpenseModule,
   ],
   controllers: [],
   providers: [

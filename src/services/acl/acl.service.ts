@@ -21,6 +21,12 @@ export class ACLService {
     'category.delete': ['admin_geral'],
     'category.create': ['admin_geral'],
     'category.update': ['admin_geral'],
+
+    'expense.read': ['admin_geral'],
+    'expense.delete': ['admin_geral'],
+    'expense.create': ['admin_geral'],
+    'expense.update': ['admin_geral'],
+
   };
 
   verifyPermission(action: action, auth: AuthPresenter, errorMessage?: string): boolean {
