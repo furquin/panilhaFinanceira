@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ICategory } from "src/modules/category/interface/category.interface";
-import { IUser } from "src/modules/users/interface";
+import { IExpense } from "src/modules/expense/interface/expense.interface";
+import { DateTime } from 'luxon';
 
 export class ExpensePresenter {
     @ApiProperty()
@@ -19,21 +19,21 @@ export class ExpensePresenter {
     currentRecurrence: number;
 
     @ApiProperty()
-    date: Date;
+    date: string;
 
     @ApiProperty()
-    category: ICategory;
+    category: string;
 
     @ApiProperty()
-    user: IUser
+    user: string
 
-    constructor(expense: Partial<any>) {
+    constructor(expense: Partial<IExpense>) {
         this.id = expense.id;
         this.description = expense.description;
         this.valueCents = expense.valueCents;
         this.recurrences = expense.recurrences;
         this.currentRecurrence = expense.currentRecurrence;
-        this.date = expense.date;
+        this.date = DateTime.fromJSDate(expense.date).toFormat('dd/MM/yyyy')
         this.category = expense.category.name
         this.user = expense.user.name
     }
